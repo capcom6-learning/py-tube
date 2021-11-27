@@ -1,4 +1,4 @@
 from core import app, Configuration
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=Configuration.PORT)
+    app.run(host='0.0.0.0', port=Configuration.PORT, threaded=True)
