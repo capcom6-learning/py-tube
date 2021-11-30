@@ -12,3 +12,15 @@ services:
     environment:
       - PORT=80
     restart: 'no'
+
+  video-storage:
+    image: py-video-storage
+    build:
+      context: ./video-storage-azure
+      dockerfile: Dockerfile
+    container_name: py-video-storage
+    ports:
+      - "4001:80"
+    environment:
+      - PORT=80
+    restart: 'no'
