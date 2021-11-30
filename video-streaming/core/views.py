@@ -1,22 +1,23 @@
 import os
-from datetime import datetime
-from flask import send_file, request, Response
-from flask_rangerequest import RangeRequest
-from core import app
-from config import basedir
+from flask import request, Response, stream_with_context
+from core import app, Configuration
+import requests
 
 @app.route('/video')
 def video():
-    filename = os.path.join(basedir, 'videos', 'SampleVideo_1280x720_30mb.mp4')
-    stats = os.stat(filename)
-    size = stats.st_size
-    last_modified = datetime.fromtimestamp(stats.st_mtime)
-    with open(filename, 'rb') as f:
-        etag = RangeRequest.make_etag(f)
-    return RangeRequest(
-        open(filename, 'rb'), 
-        size=size, 
-        etag=etag, 
-        last_modified=last_modified
-    ).make_response()
+    resp = requests.request(
+        method=request.method,
+        url="http://%s:%d/video?path=SampleVideo_1280x720_30mb.mp4" % (Configuration.VIDEO_STORAGE_HOST, Configuration.VIDEO_STORAGE_PORT,),
+        headers={ key : value for (key, value) in request.headers if key != 'Host' },
+        allow_redirects=False,
+        stream=True,
+    )
+
+    excluded_headers = ['content-encoding', 'transfer-encoding', 'connection']
+    headers = [(name, value) for (name, value) in resp.raw.headers.items()
+               if name.lower() not in excluded_headers]
+
+    response = Response(stream_with_context(resp.iter_content(64 * 1024)), resp.status_code, headers)
+    return response
+
     
