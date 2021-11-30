@@ -24,7 +24,14 @@ def video():
         expiry=datetime.utcnow() + timedelta(hours=1)
     )
 
-    blob_client = BlobClient(account_url, "videos", path, credential=sas_token, max_chunk_get_size=1024*1024, max_single_get_size=1024*1024)
+    blob_client = BlobClient(
+        account_url, 
+        "videos", 
+        path, 
+        credential=sas_token, 
+        max_chunk_get_size=1024*1024,   # important parameters for streaming
+        max_single_get_size=1024*1024
+    )
     properties = blob_client.get_blob_properties()
     # print(properties)
 
