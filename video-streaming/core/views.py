@@ -1,13 +1,28 @@
 import os
-from flask import request, Response, stream_with_context
-from core import app, Configuration
+import pprint
+
 import requests
+from flask import Response, abort, request, stream_with_context
+
+from . import database
+from core import Configuration, app
+
 
 @app.route('/video')
 def video():
+    videoId = request.args.get('id', '')
+    if not videoId:
+        abort(400)
+
+    video = database.getVideoById(videoId)
+    if not video:
+        abort(404)
+
+    pprint.pprint(video)
+
     resp = requests.request(
         method=request.method,
-        url="http://%s:%d/video?path=SampleVideo_1280x720_30mb.mp4" % (Configuration.VIDEO_STORAGE_HOST, Configuration.VIDEO_STORAGE_PORT,),
+        url="http://%s:%d/video?path=%s" % (Configuration.VIDEO_STORAGE_HOST, Configuration.VIDEO_STORAGE_PORT, video['videoPath'], ),
         headers={ key : value for (key, value) in request.headers if key != 'Host' },
         allow_redirects=False,
         stream=True,
