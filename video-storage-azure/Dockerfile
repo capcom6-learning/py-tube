@@ -13,7 +13,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 FROM base AS prod
 WORKDIR /app
 
-COPY --from=build /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/ 
+COPY --from=build /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
 COPY . .
 
 CMD [ "python", "./base.py" ]
+
+FROM python:3.9 AS dev
+WORKDIR /app
+
+CMD pip install -r requirements.txt && \
+    watchgod base.main
+
