@@ -18,7 +18,10 @@ def video():
     if not video:
         abort(404)
 
-    pprint.pprint(video)
+    # pprint.pprint(video)
+
+    if not request.range:
+        requests.post('http://%s:%d/viewed' % (Configuration.HISTORY_HOST, Configuration.HISTORY_PORT,), json={'videoPath': video['videoPath']})
 
     resp = requests.request(
         method=request.method,

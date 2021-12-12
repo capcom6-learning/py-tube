@@ -16,6 +16,8 @@ services:
       - VIDEO_STORAGE_PORT=80
       - DBHOST=mongodb://db:27017
       - DBNAME=video-streaming
+      - HISTORY_HOST=history
+      - HISTORY_PORT=80
     restart: 'no'
     depends_on:
       - db
@@ -40,3 +42,19 @@ services:
       - "4002:27017"
     restart: always
 
+  history:
+    image: py-history
+    build:
+      context: ./history
+      dockerfile: Dockerfile
+      target: prod
+    container_name: py-history
+    ports:
+      - "4003:80"
+    environment:
+      - PORT=80
+      - DBHOST=mongodb://db:27017
+      - DBNAME=history
+    restart: 'no'
+    depends_on:
+      - db
