@@ -6,11 +6,12 @@ Based on Python + Flask.
 
 ## Microservices
 
-At this moment (incomplete) project consists of 2 microservices and database:
+At this moment (incomplete) project consists of 3 microservices and database:
 
 1. Video streaming service. Gets video id from query param, search for video path in *database*, get video stream from *video storage* service and return to client.
 2. Video storage service. Uses Azure Blob storage for videos storage and returns stream by path for *video streaming* service.
-3. MongoDB for storing data.
+3. History service. Receives "viewed" events from *video streaming service* by http and puts it into *database*.
+4. MongoDB for storing data.
 
 ## Requirements
 
