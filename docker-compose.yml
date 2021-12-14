@@ -19,12 +19,12 @@ services:
       - VIDEO_STORAGE_PORT=80
       - DBHOST=mongodb://db:27017
       - DBNAME=video-streaming
-      - HISTORY_HOST=history
-      - HISTORY_PORT=80
+      - RABBIT=amqp://guest:guest@rabbit:5672
       - FLASK_ENV=development
     restart: 'no'
     depends_on:
       - db
+      - rabbit
 
   video-storage:
     image: py-video-storage
@@ -71,4 +71,15 @@ services:
     restart: 'no'
     depends_on:
       - db
+      - rabbit
 
+  rabbit:
+    image: rabbitmq:3.8-management
+    container_name: py-rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - 5672
+      - 15672
+    restart: always

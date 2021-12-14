@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-import pymongo
 from core import Configuration
 from bson.objectid import ObjectId, InvalidId
 

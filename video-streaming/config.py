@@ -12,5 +12,4 @@ class Configuration(object):
     VIDEO_STORAGE_PORT = int(os.environ.get('VIDEO_STORAGE_PORT'))
     DBHOST = os.environ.get('DBHOST')
     DBNAME = os.environ.get('DBNAME')
-    HISTORY_HOST = os.environ.get('HISTORY_HOST')
-    HISTORY_PORT = int(os.environ.get('HISTORY_PORT'))
+    RABBIT = os.environ.get('RABBIT')
