@@ -83,3 +83,19 @@ services:
       - 5672
       - 15672
     restart: always
+
+  recommendations:
+    image: py-recommendations
+    build:
+      context: ./recommendations
+      dockerfile: Dockerfile
+      target: dev
+    container_name: py-recommendations
+    environment:
+      - RABBIT=amqp://guest:guest@rabbit:5672
+    volumes:
+      - "./recommendations:/app:z"
+      - "/tmp/recommendations/python-cache:/root/.cache:z"
+    restart: 'no'
+    depends_on:
+      - rabbit
