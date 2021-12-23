@@ -99,3 +99,24 @@ services:
     restart: 'no'
     depends_on:
       - rabbit
+
+  metadata:
+    image: py-metadata
+    build:
+      context: ./metadata
+      dockerfile: Dockerfile
+      target: dev
+    container_name: py-metadata
+    ports:
+      - "4005:80"
+    environment:
+      - PORT=80
+      - DBHOST=mongodb://db:27017
+      - DBNAME=metadata
+      - FLASK_ENV=development
+    volumes:
+      - "./metadata:/app:z"
+      - "/tmp/metadata/python-cache:/root/.cache:z"
+    restart: 'no'
+    depends_on:
+      - db

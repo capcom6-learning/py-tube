@@ -84,3 +84,20 @@ services:
     restart: 'no'
     depends_on:
       - rabbit
+
+  metadata:
+    image: py-metadata
+    build:
+      context: ./metadata
+      dockerfile: Dockerfile
+      target: prod
+    container_name: py-metadata
+    ports:
+      - "4005:80"
+    environment:
+      - PORT=80
+      - DBHOST=mongodb://db:27017
+      - DBNAME=metadata
+    restart: 'no'
+    depends_on:
+      - db
