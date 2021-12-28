@@ -14,4 +14,5 @@ FROM python:3.9 as dev
 WORKDIR /app
 
 CMD pip install -r requirements.txt && \
+    pip install watchgod && \
     watchgod base.main

@@ -1,8 +1,9 @@
+import pprint
 import requests
 import json
 from flask import Response, abort, request, stream_with_context
 
-from . import database
+from . import metadata
 from core import Configuration, app
 from . import rabbit
 
@@ -12,18 +13,16 @@ def video():
     if not videoId:
         abort(400)
 
-    video = database.getVideoById(videoId)
+    video = metadata.get_video(videoId)
+    pprint.pprint(video)
     if not video:
         abort(404)
-
-    # pprint.pprint(video)
 
     if not request.range:
         msg = json.dumps({'videoPath': video['videoPath']})
         channel = rabbit.makeChannel()
         channel.basic_publish(exchange='viewed', routing_key='', body=msg)
         rabbit.closeChannel()
-        # requests.post('http://%s:%d/viewed' % (Configuration.HISTORY_HOST, Configuration.HISTORY_PORT,), json={'videoPath': video['videoPath']})
 
     resp = requests.request(
         method=request.method,
