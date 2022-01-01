@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import pymongo
+from datetime import datetime
 from core import Configuration
 from bson.objectid import ObjectId, InvalidId
 
@@ -8,5 +8,5 @@ database = dbclient[Configuration.DBNAME]
 collection = database['videos']
 
 def addToHistory(videoId):
-    record = { 'videoId': videoId }
+    record = { 'videoId': videoId, 'watched': datetime.now() }
     collection.insert_one(record)
