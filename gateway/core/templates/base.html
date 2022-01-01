@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>{% block title %}{% endblock %} - PyTube</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    </head>
+    <body>
+        <div class="flex flex-col">
+            <div class="border-b-2 bg-gray-100">
+                <div class="nav flex flex-row items-center mt-1 p-2">
+                    <div class="text-xl font-bold">
+                        PyTube
+                    </div>
+                    <div class="ml-16 {% if request.path == url_for('index') %}border-b-2 border-blue-600 {% endif %}">
+                        <a href="{{ url_for('index') }}">Videos</a>
+                    </div>
+                    <div class="ml-4 {% if request.path == url_for('upload') %}border-b-2 border-blue-600 {% endif %}">
+                        <a href="{{ url_for('upload') }}">Upload</a>
+                    </div>
+                    <div class="ml-4 {% if request.path == url_for('history') %}border-b-2 border-blue-600 {% endif %}">
+                        <a href="{{ url_for('history') }}">History</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-4">
+                <h1>{% block header %}{% endblock %}</h1>
+                <div class="m-4">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

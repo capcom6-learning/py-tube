@@ -119,3 +119,21 @@ services:
     restart: 'no'
     depends_on:
       - db
+
+  gateway:
+    image: py-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+      target: dev
+    container_name: py-gateway
+    ports:
+      - "4006:80"
+    environment:
+      - PORT=80
+      - METADATA_HOST=http://metadata
+      - FLASK_ENV=development
+    volumes:
+      - "./gateway:/app:z"
+      - "/tmp/gateway/python-cache:/root/.cache:z"
+    restart: 'no'

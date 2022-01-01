@@ -100,3 +100,17 @@ services:
     restart: 'no'
     depends_on:
       - db
+
+  gateway:
+    image: py-gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+      target: prod
+    container_name: py-gateway
+    ports:
+      - "4006:80"
+    environment:
+      - PORT=80
+      - METADATA_HOST=http://metadata
+    restart: 'no'

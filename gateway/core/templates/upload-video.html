@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Upload video{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form class="upload-form">
+        <p>Click the button and choose videos to upload.</p>
+        <input 
+            class="mt-2"
+            type="file" 
+            id="uploadInput" 
+            accept="video/*" 
+            onchange="uploadFiles(this.files)"
+            />
+    </form>
+
+    <div id="results" class="mt-4">
+        <div>Uploaded:</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

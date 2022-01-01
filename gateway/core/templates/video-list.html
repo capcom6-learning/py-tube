@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    {% if videos %}
+        {% for video in videos %}
+            <div class="mt-1">
+                <a href="{{ url_for('video', id=video._id) }}">{{ video.name }}</a> 
+            </div>
+        {% endfor %}
+    {% else %}
+        No videos uploaded yet.
+    {% endif %}
+{% endblock %}
