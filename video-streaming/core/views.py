@@ -19,7 +19,7 @@ def video():
         abort(404)
 
     if not request.range:
-        msg = json.dumps({'videoPath': video['videoPath']})
+        msg = json.dumps({'videoId': video['_id']})
         channel = rabbit.makeChannel()
         channel.basic_publish(exchange='viewed', routing_key='', body=msg)
         rabbit.closeChannel()
