@@ -16,11 +16,12 @@ WORKDIR /app
 COPY --from=build /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
 COPY . .
 
-CMD [ "python", "./base.py" ]
+CMD [ "python", "-u", "./base.py" ]
 
 FROM python:3.9 AS dev
 WORKDIR /app
 
 CMD pip install -r requirements.txt && \
-    watchgod base.main
+    pip install watchgod && \
+    watchgod base.main --args -u
 
