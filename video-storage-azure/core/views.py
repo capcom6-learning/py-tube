@@ -1,12 +1,8 @@
-import os
-from io import BufferedRandom, BytesIO
 from datetime import datetime, timedelta
-from flask import send_file, request, Response, abort, make_response, stream_with_context
+from flask import request, Response, abort, stream_with_context
 from core import app, Configuration
 from azure.storage.blob import generate_account_sas, ResourceTypes, AccountSasPermissions, BlobClient
-
-async def pipe(f, t):
-    await f.readinto(t)
+from core.storage import StorageClient
 
 @app.route('/video')
 def video():
@@ -15,34 +11,19 @@ def video():
     if not path:
         abort(400)
 
-    account_url = "https://%s.blob.core.windows.net" % (Configuration.STORAGE_ACCOUNT_NAME,)
-    sas_token = generate_account_sas(
-        account_name=Configuration.STORAGE_ACCOUNT_NAME,
-        account_key=Configuration.STORAGE_ACCESS_KEY,
-        resource_types=ResourceTypes(object=True),
-        permission=AccountSasPermissions(read=True),
-        expiry=datetime.utcnow() + timedelta(hours=1)
+    client = StorageClient(
+        Configuration.STORAGE_ACCOUNT_NAME, 
+        Configuration.STORAGE_ACCESS_KEY, 
+        path
     )
 
-    blob_client = BlobClient(
-        account_url, 
-        "videos", 
-        path, 
-        credential=sas_token, 
-        max_chunk_get_size=1024*1024,   # important parameters for streaming
-        max_single_get_size=1024*1024
-    )
-    properties = blob_client.get_blob_properties()
-    # print(properties)
-
+    properties = client.get_properties()
+    
     offset = bytes_range.ranges[0][0] if bytes_range else 0
     length = ((bytes_range.ranges[0][1] or properties.size) - bytes_range.ranges[0][0] + 1) if bytes_range else properties.size
-
     print("Start %d length %d" % (offset, length))
-    download_stream = blob_client.download_blob(
-        offset = offset,
-        length = length,
-    )
+
+    download_stream = client.get_download_stream(offset, length)
 
     response = Response(stream_with_context(download_stream.chunks()))
 
