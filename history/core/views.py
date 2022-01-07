@@ -1,9 +1,6 @@
-import os
-import pprint
+from flask import Response, abort, request, jsonify
 
-from flask import Response, abort, request, stream_with_context
-
-from core import Configuration, app
+from core import app
 
 from . import database
 
@@ -11,13 +8,13 @@ from . import database
 def index():
     return 'History service online'
 
-@app.route('/viewed', methods=['POST'])
+@app.post('/viewed')
 def viewed():
     payload = request.get_json()
     if not payload:
         abort(400)
 
-    videoPath = payload['videoPath']
+    videoPath = payload['videoId']
     if not videoPath:
         abort(400)
 
@@ -25,4 +22,6 @@ def viewed():
     
     return Response(None, 200)
 
-    
+@app.get('/viewed')
+def get_viewed():
+    return jsonify(database.select())
