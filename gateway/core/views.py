@@ -29,4 +29,4 @@ def video():
     if not video:
         return abort(404)
 
-    return render_template('history.html')
+    return render_template('play-video.html', video=video)
