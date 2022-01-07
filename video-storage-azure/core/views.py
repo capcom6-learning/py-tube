@@ -1,21 +1,22 @@
-from datetime import datetime, timedelta
-from flask import request, Response, abort, stream_with_context
+from flask import request, Response, abort, stream_with_context, request
 from core import app, Configuration
-from azure.storage.blob import generate_account_sas, ResourceTypes, AccountSasPermissions, BlobClient
 from core.storage import StorageClient
 
-@app.route('/video')
+def make_client(path: str) -> StorageClient:
+    return StorageClient(
+        Configuration.STORAGE_ACCOUNT_NAME, 
+        Configuration.STORAGE_ACCESS_KEY, 
+        path
+    )
+
+@app.get('/video')
 def video():
     path = request.args.get('path', '')
     bytes_range = request.range
     if not path:
         abort(400)
 
-    client = StorageClient(
-        Configuration.STORAGE_ACCOUNT_NAME, 
-        Configuration.STORAGE_ACCESS_KEY, 
-        path
-    )
+    client = make_client(path)
 
     properties = client.get_properties()
     
@@ -34,3 +35,19 @@ def video():
         response.headers['Content-Range'] = str(bytes_range.to_content_range_header(properties.size))
         response.status = 206
     return response
+
+@app.put('/video')
+def put_video():
+    path = request.args.get('path', '')
+    if not path:
+        abort(400)
+
+    client = make_client(path)
+
+    try:
+        client.upload_stream(request.stream, request.content_type)
+    except Exception as e:
+        print(e)
+        abort(500)
+
+    return Response(status = 201)

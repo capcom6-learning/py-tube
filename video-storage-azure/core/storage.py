@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from azure.storage.blob import generate_account_sas, ResourceTypes, AccountSasPermissions, BlobClient, BlobProperties
+from azure.storage.blob import generate_account_sas, ResourceTypes, AccountSasPermissions, BlobClient, BlobProperties, ContentSettings
 from datetime import datetime, timedelta
 
 class StorageClient:
@@ -23,7 +23,7 @@ class StorageClient:
             account_name=account_name,
             account_key=account_key,
             resource_types=ResourceTypes(object=True),
-            permission=AccountSasPermissions(read=True),
+            permission=AccountSasPermissions(read=True, write=True),
             expiry=datetime.utcnow() + timedelta(hours=1)
         )
         self.client = BlobClient(
@@ -44,3 +44,8 @@ class StorageClient:
             length = length,
         )
     
+    def upload_stream(self, stream, content_type: str):
+        return self.client.upload_blob(
+            stream,
+            content_settings=ContentSettings(content_type=content_type),
+        )
