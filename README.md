@@ -14,7 +14,7 @@ At this moment (incomplete) project consists of 6 microservices, database and me
 4. MongoDB for storing data.
 5. RabbitMQ for indirect communications.
 6. Recommendations service. Receives "viewed" events by *RabbitMQ* and simply prints it to console.
-7. [Metadata service](./metadata/README.md)). Provides video metadata to other services.
+7. [Metadata service](./metadata/README.md). Provides video metadata to other services.
 8. Gateway service. Provides UI to users by fetching data from *metadata* service.
 
 ![Architecture](./images/tube_service.png "PyTube architecture")
