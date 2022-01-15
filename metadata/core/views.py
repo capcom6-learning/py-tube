@@ -22,3 +22,13 @@ def videos():
     videos = database.select_videos()
     
     return jsonify(videos)
+
+@app.route('/video', methods=['POST'])
+def post_video():
+    video = request.get_json()
+    if not video \
+        or not video['name'] \
+            or not video['videoPath']:
+        abort(400)
+
+    return database.add_video(video)

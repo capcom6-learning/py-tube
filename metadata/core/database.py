@@ -23,3 +23,10 @@ def get_video(id: str):
     if video:
         video['_id'] = str(video['_id'])
     return video
+
+def add_video(video: dict) -> dict:
+    get_db().db.videos.insert_one(video)
+    
+    video['_id'] = str(video['_id'])
+    # video['_id'] = str(result.inserted_id)
+    return video
