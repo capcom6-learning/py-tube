@@ -32,8 +32,8 @@ Returns all registered videos.
 
 ### GET /video?id={id}
 
-Return single video with given id or 404 if no such video exists.
+Returns single video with given id or 404 if no such video exists.
 
 ### POST /video
 
-Creates new video with given parameters. Accepts `application/json`.
+Registers new video with given `name` and `videoPath`. Accepts `application/json`.
