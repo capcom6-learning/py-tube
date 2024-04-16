@@ -6,7 +6,7 @@ charset-normalizer==2.0.8
 click==8.0.3
 cryptography==42.0.4
 Flask==2.3.2
-idna==3.3
+idna==3.7
 isodate==0.6.0
 itsdangerous==2.0.1
 Jinja2==3.1.3
